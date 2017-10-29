@@ -15,10 +15,11 @@ class User
 
     }
 
-    function register($connection)
+    function register($mysqli)
     {
+        echo "注册";
         $sql = "INSERT INTO table_user (username, password) VALUES ('$this->username', '$this->password')";
-        $result = mysqli_query($connection, $sql);
+        $result = $mysqli->query($sql);
         return $result;
     }
 }

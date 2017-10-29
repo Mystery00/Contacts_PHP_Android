@@ -14,12 +14,15 @@ if (empty($username) || empty($password)) {
     return;
 }
 
-$connection = connectDatabase();
-if (!$connection)
+$mysqli = connectDatabase();
+if (!$mysqli)
+{
+    echo "err";
     return;
+}
 
 $user = new User();
 $user->username = $username;
 $user->password = $password;
-$result = $user->register($connection);
-echo $result;
+$result = $user->register($mysqli);
+echo $result->num_rows;

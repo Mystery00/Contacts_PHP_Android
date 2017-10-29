@@ -7,5 +7,9 @@ define('db_name', 'db_contacts');
 
 function connectDatabase()
 {
-    return mysqli_connect(ServerName, db_username, db_password, db_name) or die("数据库错误，错误信息：" . mysqli_connect_error());
+    $mysqli = new mysqli(ServerName, db_username, db_password, db_name);
+    if ($mysqli->connect_error) {
+        die('连接错误' . $mysqli->connect_error);
+    }
+    return true;
 }
