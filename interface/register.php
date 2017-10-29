@@ -4,7 +4,9 @@
  * User: myste
  */
 
-require_once '../util/MysqlUtil.php';
+require_once '../config.php';
+require_once WWW . '/util/MysqlUtil.php';
+require_once WWW . '/class/User.php';
 
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -16,13 +18,25 @@ if (empty($username) || empty($password)) {
 
 $mysqli = connectDatabase();
 if (!$mysqli)
-{
-    echo "err";
     return;
-}
 
 $user = new User();
 $user->username = $username;
 $user->password = $password;
 $result = $user->register($mysqli);
-echo $result->num_rows;
+$response = new Response();
+switch ($result) {
+    case 1:
+        $response->code = 0;
+        $response->message = '注册成功！';
+        break;
+    case -233:
+        $response->code = 1;
+        $response->message = '该用户已存在！';
+        break;
+    default:
+        $response->code = 2;
+        $response->message = '注册失败！';
+        break;
+}
+echo json_encode($response);

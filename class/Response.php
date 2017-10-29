@@ -4,4 +4,8 @@
  * User: myste
  */
 
-define("WWW", $_SERVER['DOCUMENT_ROOT'].'/Contacts');
+class Response
+{
+    var $code;
+    var $message;
+}
