@@ -31,19 +31,24 @@ if (!$mysqli) {
 $user = new User();
 $user->username = $username;
 $user->password = $password;
-$result = $user->register($mysqli);
-switch ($result) {
-    case 0:
-        $response->code = 0;
-        $response->message = '注册成功！';
-        break;
-    case -1:
-        $response->code = 2;
-        $response->message = '该用户已存在！';
-        break;
-    default:
-        $response->code = 4;
-        $response->message = '注册失败！';
-        break;
+$result = $user->login($mysqli);
+if ($result instanceof mysqli_result)
+    switch ($result->num_rows) {
+        case 1:
+            $response->code = 0;
+            $response->message = '登录成功！';
+            break;
+        default:
+            $response->code = 4;
+            $response->message = '登陆失败！';
+            break;
+    }
+else if ($result == -1) {
+    $response->code = 2;
+    $response->message = '该用户不存在！';
+}else
+{
+    $response->code = 5;
+    $response->message = '登陆失败！';
 }
 echo json_encode($response);
