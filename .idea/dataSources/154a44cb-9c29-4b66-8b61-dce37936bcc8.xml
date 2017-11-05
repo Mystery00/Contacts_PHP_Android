@@ -36,20 +36,30 @@
       <Position>4</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="15" parent="7" name="user_id">
+    <column id="15" parent="7" name="phone_count">
       <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+    </column>
+    <column id="16" parent="7" name="email_count">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+    </column>
+    <column id="17" parent="7" name="user_id">
+      <Position>7</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="16" parent="7" name="user_id_idx">
+    <index id="18" parent="7" name="user_id_idx">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="17" parent="7" name="PRIMARY">
+    <key id="19" parent="7" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>contact_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="18" parent="7" name="user">
+    <foreign-key id="20" parent="7" name="user">
       <ColNames>user_id</ColNames>
       <RefSchemaName>db_contacts</RefSchemaName>
       <RefTableName>table_user</RefTableName>
@@ -57,31 +67,31 @@
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="19" parent="8" name="email_id">
+    <column id="21" parent="8" name="email_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="20" parent="8" name="email_address">
+    <column id="22" parent="8" name="email_address">
       <Position>2</Position>
       <DataType>varchar(45)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="21" parent="8" name="contact_id">
+    <column id="23" parent="8" name="contact_id">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="22" parent="8" name="contacts_idx">
+    <index id="24" parent="8" name="contacts_idx">
       <ColNames>contact_id</ColNames>
     </index>
-    <key id="23" parent="8" name="PRIMARY">
+    <key id="25" parent="8" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>email_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="24" parent="8" name="contacts_email">
+    <foreign-key id="26" parent="8" name="contacts_email">
       <ColNames>contact_id</ColNames>
       <RefSchemaName>db_contacts</RefSchemaName>
       <RefTableName>table_contacts</RefTableName>
@@ -89,36 +99,36 @@
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="25" parent="9" name="phone_id">
+    <column id="27" parent="9" name="phone_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="26" parent="9" name="phone_number">
+    <column id="28" parent="9" name="phone_number">
       <Position>2</Position>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="27" parent="9" name="phone_type">
+    <column id="29" parent="9" name="phone_type">
       <Position>3</Position>
       <DataType>varchar(45)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="28" parent="9" name="contact_id">
+    <column id="30" parent="9" name="contact_id">
       <Position>4</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="29" parent="9" name="contacts_idx">
+    <index id="31" parent="9" name="contacts_idx">
       <ColNames>contact_id</ColNames>
     </index>
-    <key id="30" parent="9" name="PRIMARY">
+    <key id="32" parent="9" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>phone_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="31" parent="9" name="contacts_phone">
+    <foreign-key id="33" parent="9" name="contacts_phone">
       <ColNames>contact_id</ColNames>
       <RefSchemaName>db_contacts</RefSchemaName>
       <RefTableName>table_contacts</RefTableName>
@@ -126,23 +136,23 @@
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="32" parent="10" name="user_id">
+    <column id="34" parent="10" name="user_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="33" parent="10" name="username">
+    <column id="35" parent="10" name="username">
       <Position>2</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="34" parent="10" name="password">
+    <column id="36" parent="10" name="password">
       <Position>3</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="35" parent="10" name="PRIMARY">
+    <key id="37" parent="10" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>user_id</ColNames>
       <Primary>1</Primary>

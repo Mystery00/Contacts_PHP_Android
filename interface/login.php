@@ -6,8 +6,8 @@
 
 require_once '../config.php';
 require_once WWW . '/util/MysqlUtil.php';
-require_once WWW . '/class/User.php';
 require_once WWW . '/util/ResponseUtil.php';
+require_once WWW . '/class/User.php';
 
 $username = $_POST['username'];
 $password = $_POST['password'];

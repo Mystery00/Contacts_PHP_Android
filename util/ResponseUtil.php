@@ -3,6 +3,7 @@
  * Created by PhpStorm.
  * User: myste
  */
+
 require_once '../config.php';
 require_once WWW . '/class/Response.php';
 
@@ -55,6 +56,42 @@ function registerResponseFormat(int $code)
             break;
         default:
             $response->message = '其他错误';
+            break;
+    }
+    return $response;
+}
+
+function actionResponseFormat($action, int $code)
+{
+    $response = new Response();
+    $response->code = $code;
+    $message = '';
+    switch ($action) {
+        case 'insert':
+            $message .= '插入';
+            break;
+        case 'database':
+            $message .= '数据库连接';
+            break;
+    }
+    switch ($code) {
+        case 0:
+            $response->message = $message . '成功';
+            break;
+        case 1:
+            $response->message = $message . '失败';
+            break;
+        case 2:
+            $response->message = $message . '已存在';
+            break;
+        case 3:
+            $response->message = $message . '不存在';
+            break;
+        case -1:
+            $response->message = '参数不能为空';
+            break;
+        case -2:
+            $response->message = '异常操作';
             break;
     }
     return $response;

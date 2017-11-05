@@ -55,4 +55,24 @@ class User
         $result = $mysqli->query($sql);
         return $result;
     }
+
+    function getContacts(mysqli $mysqli)
+    {
+        $sql = "SELECT * FROM table_contacts WHERE user_id = $this->userID";
+        $result = $mysqli->query($sql);
+        $list = array();
+        $index = 0;
+        while ($row = $result->fetch_assoc()) {
+            $temp = new Contact();
+            $temp->contactID = $row['contact_id'];
+            $temp->contactName = $row['contact_name'];
+            $temp->contactInit = $row['contact_init'];
+            $temp->contactMark = $row['contact_mark'];
+            $temp->getPhoneList($mysqli);
+            $temp->getEmailList($mysqli);
+            $list[$index] = $temp;
+            $index++;
+        }
+        return $list;
+    }
 }
