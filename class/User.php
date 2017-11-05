@@ -12,26 +12,41 @@ class User
     var $username;
     var $password;
 
+    /**
+     * @param mysqli $mysqli
+     * @return bool|int|mysqli_result
+     */
     function login(mysqli $mysqli)
     {
-        $searchResult = $this->search($mysqli);
-        if ($searchResult->num_rows != 1)
-            return 1;
-        $sql = "SELECT password FROM table_user WHERE username='$this->username'";
-        $result = $mysqli->query($sql);
-        if ($result->num_rows!=1)
-            return 4;
-        return $result;
+        try {
+            $searchResult = $this->search($mysqli);
+            if ($searchResult->num_rows != 1)
+                return 3;//用户数量不唯一
+            $sql = "SELECT password FROM table_user WHERE username='$this->username'";
+            $result = $mysqli->query($sql);
+            if ($result->num_rows != 1)
+                return 4;//用户数量不唯一
+            if ($result->fetch_array()[0] == $this->password)
+                return 0;//登陆成功
+            else
+                return 5;//登录失败，未知原因
+        } catch (mysqli_sql_exception $exception) {
+            return 6;
+        }
     }
 
     function register(mysqli $mysqli)
     {
-        $searchResult = $this->search($mysqli);
-        if ($searchResult->num_rows != 0)
-            return -1;
-        $sql = "INSERT INTO table_user (username, password) VALUES ('$this->username', '$this->password')";
-        $result = $mysqli->query($sql);
-        return $result;
+        try {
+            $searchResult = $this->search($mysqli);
+            if ($searchResult->num_rows != 0)
+                return -1;//用户已存在
+            $sql = "INSERT INTO table_user (username, password) VALUES ('$this->username', '$this->password')";
+            $result = $mysqli->query($sql);
+            return $result;//返回插入影响行数
+        } catch (mysqli_sql_exception $exception) {
+            return -2;
+        }
     }
 
     function search(mysqli $mysqli)
