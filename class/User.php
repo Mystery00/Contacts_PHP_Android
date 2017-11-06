@@ -19,33 +19,22 @@ class User
     function login(mysqli $mysqli)
     {
         try {
-            $searchResult = $this->search($mysqli);
-            if ($searchResult->num_rows != 1)
-                return 3;//用户数量不唯一
-            $sql = "SELECT password FROM table_user WHERE username='$this->username'";
-            $result = $mysqli->query($sql);
-            if ($result->num_rows != 1)
-                return 4;//用户数量不唯一
-            if ($result->fetch_array()[0] == $this->password)
-                return 0;//登陆成功
-            else
-                return 5;//登录失败，未知原因
+            $sql = "SELECT function_login('$this->username','$this->password')";
+            $result = $mysqli->query($sql)->fetch_row()[0];
+            return $result;
         } catch (mysqli_sql_exception $exception) {
-            return 6;
+            return 5;
         }
     }
 
     function register(mysqli $mysqli)
     {
         try {
-            $searchResult = $this->search($mysqli);
-            if ($searchResult->num_rows != 0)
-                return -1;//用户已存在
-            $sql = "INSERT INTO table_user (username, password) VALUES ('$this->username', '$this->password')";
-            $result = $mysqli->query($sql);
-            return $result;//返回插入影响行数
+            $sql = "SELECT function_register('$this->username','$this->password')";
+            $result = $mysqli->query($sql)->fetch_row()[0];
+            return $result;
         } catch (mysqli_sql_exception $exception) {
-            return -2;
+            return 5;
         }
     }
 

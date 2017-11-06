@@ -21,7 +21,7 @@ CREATE PROCEDURE procedure_phoneInsert(phoneNumber VARCHAR(20), phoneType VARCHA
     END //
 
 # 删除记录 存储过程
-CREATE PROCEDURE procedure_phoneDelete(phoneID INT, delete_code BOOLEAN)
+CREATE PROCEDURE procedure_phoneDelete(phoneID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
@@ -29,7 +29,7 @@ CREATE PROCEDURE procedure_phoneDelete(phoneID INT, delete_code BOOLEAN)
         DELETE FROM table_phone
         WHERE phoneID = phone_id;
         CALL procedure_getPhoneCount(new_count);
-        IF old_count + 1 = new_count
+        IF old_count - 1 = new_count
         THEN
             SET delete_code = TRUE;
         ELSE
@@ -38,7 +38,8 @@ CREATE PROCEDURE procedure_phoneDelete(phoneID INT, delete_code BOOLEAN)
     END //
 
 # 查询记录 存储过程
-CREATE PROCEDURE procedure_checkPhone(phoneNumber VARCHAR(20), contactID INT, check_code BOOLEAN)
+CREATE PROCEDURE procedure_checkPhone(phoneNumber VARCHAR(20), contactID INT,
+    OUT                               check_code  BOOLEAN)
     BEGIN
         DECLARE temp INT;
         SET temp = (SELECT count(phone_id)
@@ -66,7 +67,7 @@ CREATE PROCEDURE procedure_phoneUpdate(phoneNumber VARCHAR(20), phoneType VARCHA
 CREATE PROCEDURE procedure_getPhoneCount(OUT phoneCount INT)
     BEGIN
         SET phoneCount = (SELECT count(phone_id)
-                            FROM table_phone);
+                          FROM table_phone);
     END //
 
 # 获取ID 函数

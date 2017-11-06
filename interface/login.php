@@ -14,12 +14,12 @@ $password = $_POST['password'];
 
 $mysqli = connectDatabase();
 if (!$mysqli) {
-    echo json_encode(loginResponseFormat(1));
+    echo json_encode(loginResponseFormat(3));
     return;
 }
 
 if (empty($username) || empty($password)) {
-    echo json_encode(loginResponseFormat(2));
+    echo json_encode(loginResponseFormat(4));
     return;
 }
 

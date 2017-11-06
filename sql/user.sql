@@ -2,6 +2,7 @@ USE db_contacts;
 DELIMITER //
 
 # 登陆 存储过程
+DROP PROCEDURE IF EXISTS procedure_login;
 CREATE PROCEDURE procedure_login(new_username TEXT, new_password TEXT, OUT login_code INT)
     BEGIN
         SET login_code = (SELECT count(user_id)
@@ -10,6 +11,7 @@ CREATE PROCEDURE procedure_login(new_username TEXT, new_password TEXT, OUT login
     END //
 
 # 注册 存储过程
+DROP PROCEDURE IF EXISTS procedure_register;
 CREATE PROCEDURE procedure_register(new_username TEXT, new_password TEXT, OUT register_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
@@ -26,6 +28,7 @@ CREATE PROCEDURE procedure_register(new_username TEXT, new_password TEXT, OUT re
     END //
 
 # 获取当前用户数量 存储过程
+DROP PROCEDURE IF EXISTS procedure_getUserCount;
 CREATE PROCEDURE procedure_getUserCount(OUT userCount INT)
     BEGIN
         SET userCount = (SELECT count(user_id)
@@ -33,6 +36,7 @@ CREATE PROCEDURE procedure_getUserCount(OUT userCount INT)
     END //
 
 # 检查用户是否存在 存储过程
+DROP PROCEDURE IF EXISTS procedure_checkUser;
 CREATE PROCEDURE procedure_checkUser(new_username TEXT, OUT check_code BOOLEAN)
     BEGIN
         DECLARE temp INT;
@@ -47,7 +51,17 @@ CREATE PROCEDURE procedure_checkUser(new_username TEXT, OUT check_code BOOLEAN)
         END IF;
     END //
 
+# 查询用户信息 存储过程
+DROP PROCEDURE IF EXISTS procedure_getUserInfo;
+CREATE PROCEDURE procedure_getUserInfo(new_username TEXT)
+    BEGIN
+        SELECT *
+        FROM table_user
+        WHERE username = new_username;
+    END //
+
 # 登陆 函数
+DROP FUNCTION IF EXISTS function_login;
 CREATE FUNCTION function_login(new_username TEXT, new_password TEXT)
     RETURNS INT
     BEGIN
@@ -69,6 +83,7 @@ CREATE FUNCTION function_login(new_username TEXT, new_password TEXT)
     END //
 
 # 注册 函数
+DROP FUNCTION IF EXISTS function_register;
 CREATE FUNCTION function_register(new_username TEXT, new_password TEXT)
     RETURNS INT
     BEGIN
@@ -86,4 +101,14 @@ CREATE FUNCTION function_register(new_username TEXT, new_password TEXT)
         ELSE
             RETURN 2; #注册失败
         END IF;
+    END //
+
+# 查询用户id 函数
+DROP FUNCTION IF EXISTS function_getUserID;
+CREATE FUNCTION function_getUserID(username TEXT)
+    RETURNS INT
+    BEGIN
+        RETURN (SELECT user_id
+                FROM table_user
+                WHERE table_user.username = username);
     END //

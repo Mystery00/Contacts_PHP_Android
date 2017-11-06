@@ -20,7 +20,7 @@ CREATE PROCEDURE procedure_emailInsert(emailAddress VARCHAR(45), contactID INT,
     END //
 
 # 删除记录 存储过程
-CREATE PROCEDURE procedure_emailDelete(emailID INT, delete_code BOOLEAN)
+CREATE PROCEDURE procedure_emailDelete(emailID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
@@ -28,7 +28,7 @@ CREATE PROCEDURE procedure_emailDelete(emailID INT, delete_code BOOLEAN)
         DELETE FROM table_email
         WHERE emailID = email_id;
         CALL procedure_getEmailCount(new_count);
-        IF old_count + 1 = new_count
+        IF old_count - 1 = new_count
         THEN
             SET delete_code = TRUE;
         ELSE
@@ -37,7 +37,8 @@ CREATE PROCEDURE procedure_emailDelete(emailID INT, delete_code BOOLEAN)
     END //
 
 # 查询记录 存储过程
-CREATE PROCEDURE procedure_checkEmail(emailAddress VARCHAR(45), contactID INT, check_code BOOLEAN)
+CREATE PROCEDURE procedure_checkEmail(emailAddress VARCHAR(45), contactID INT,
+    OUT                               check_code   BOOLEAN)
     BEGIN
         DECLARE temp INT;
         SET temp = (SELECT count(email_id)
@@ -65,7 +66,7 @@ CREATE PROCEDURE procedure_emailUpdate(emailAddress VARCHAR(45),
 CREATE PROCEDURE procedure_getEmailCount(OUT emailCount INT)
     BEGIN
         SET emailCount = (SELECT count(email_id)
-                            FROM table_email);
+                          FROM table_email);
     END //
 
 # 获取ID 函数

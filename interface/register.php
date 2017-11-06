@@ -14,27 +14,18 @@ $password = $_POST['password'];
 
 $mysqli = connectDatabase();
 if (!$mysqli) {
-    echo json_encode(registerResponseFormat(1));
+    echo json_encode(registerResponseFormat(3));
     return;
 }
 
 if (empty($username) || empty($password)) {
-    echo json_encode(registerResponseFormat(2));
+    echo json_encode(registerResponseFormat(4));
     return;
 }
 
 $user = new User();
 $user->username = $username;
 $user->password = $password;
-$result = $user->register($mysqli);
-switch ($result) {
-    case 0:
-        echo json_encode(registerResponseFormat(0));
-        break;
-    case -1:
-        echo json_encode(registerResponseFormat(3));
-        break;
-    default:
-        echo json_encode(registerResponseFormat(4));
-        break;
-}
+$code = $user->register($mysqli);
+
+echo json_encode(loginResponseFormat($code));
