@@ -61,37 +61,62 @@ function registerResponseFormat(int $code)
     return $response;
 }
 
-function actionResponseFormat($action, int $code)
+function actionResponseFormat($object, $action, int $code)
 {
     $response = new Response();
     $response->code = $code;
     $message = '';
+    switch ($object) {
+        case 'contact':
+            $object = '联系人';
+            break;
+    }
     switch ($action) {
         case 'insert':
-            $message .= '插入';
+            $message = $object . '插入';
+            break;
+        case 'delete':
+            $message = $object . '删除';
+            break;
+        case 'update':
+            $message = $object . '更新';
             break;
         case 'database':
             $message .= '数据库连接';
             break;
     }
     switch ($code) {
+        case -1:
+            $response->message = $object . '已存在';
+            break;
         case 0:
             $response->message = $message . '成功';
             break;
         case 1:
-            $response->message = $message . '失败';
+            switch ($action) {
+                case 'insert':
+                    $response->message = $object . '已存在';
+                    break;
+                case 'delete':
+                    $response->message = $object . '不存在';
+                    break;
+                case 'update':
+                    $response->message = $object . '不存在';
+                    break;
+            }
             break;
         case 2:
-            $response->message = $message . '已存在';
+            $response->message = $message . '失败';
+            break;
             break;
         case 3:
-            $response->message = $message . '不存在';
-            break;
-        case -1:
             $response->message = '参数不能为空';
             break;
-        case -2:
+        case 4:
             $response->message = '异常操作';
+            break;
+        default:
+            $response->message = '未知错误';
             break;
     }
     return $response;

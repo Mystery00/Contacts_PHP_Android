@@ -27,6 +27,8 @@ function getFirstCharter($str)
         return '';
     }
     $first_char = ord($str{0});
+    if ($first_char >= ord('0') && $first_char <= ord('9'))
+        return chr($first_char);
     if ($first_char >= ord('A') && $first_char <= ord('z'))
         return strtoupper($str{0});
     $s1 = iconv('UTF-8', 'gb2312', $str);
@@ -79,5 +81,5 @@ function getFirstCharter($str)
         return 'Y';
     if ($asc >= -11055 && $asc <= -10247)
         return 'Z';
-    return null;
+    return '0';
 }

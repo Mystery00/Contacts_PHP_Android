@@ -10,10 +10,10 @@ CREATE PROCEDURE procedure_contactInsert(contactName VARCHAR(45), contactInit VA
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
-        CALL procedure_getContactCount(old_count);
+        SET old_count = function_getContactCount();
         INSERT INTO table_contacts (contact_name, contact_init, contact_mark, user_id)
         VALUES (contactName, contactInit, contactMark, userID);
-        CALL procedure_getContactCount(new_count);
+        SET new_count = function_getContactCount();
         IF old_count + 1 = new_count
         THEN
             SET insert_code = TRUE;
@@ -28,10 +28,10 @@ CREATE PROCEDURE procedure_contactDelete(contactID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
-        CALL procedure_getContactCount(old_count);
+        SET old_count = function_getContactCount();
         DELETE FROM table_contacts
         WHERE contactID = contact_id;
-        CALL procedure_getContactCount(new_count);
+        SET new_count = function_getContactCount();
         IF old_count - 1 = new_count
         THEN
             SET delete_code = TRUE;
@@ -170,15 +170,23 @@ CREATE FUNCTION function_contactDelete(contactName VARCHAR(45), userID INT)
 DROP FUNCTION IF EXISTS function_contactUpdate;
 CREATE FUNCTION function_contactUpdate(contactName VARCHAR(45), contactInit VARCHAR(1),
                                        contactMark TEXT, userID INT,
-                                       phoneID     INT)
+                                       contactID   INT)
     RETURNS INT
     BEGIN
-        DECLARE id INT;
-        SET id = function_getContactID(contactName, userID);
-        IF id = -1
+        DECLARE temp INT;
+        DECLARE isExist BOOLEAN;
+        CALL procedure_checkContact(contactName, userID, isExist);
+        IF isExist
+        THEN
+            RETURN -1; #联系人已存在
+        END IF;
+        SET temp = (SELECT count(contact_id)
+                  FROM table_contacts
+                  WHERE contact_id = contactID);
+        IF temp = 0
         THEN
             RETURN 1; #记录不存在
         END IF;
-        CALL procedure_contactUpdate(contactName, contactInit, contactMark, userID, phoneID);
+        CALL procedure_contactUpdate(contactName, contactInit, contactMark, userID, contactID);
         RETURN 0; #更新成功
     END //

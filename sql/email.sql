@@ -8,10 +8,10 @@ CREATE PROCEDURE procedure_emailInsert(emailAddress VARCHAR(45), contactID INT,
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
-        CALL procedure_getEmailCount(old_count);
+        SET old_count = function_getEmailCount();
         INSERT INTO table_email (email_address, contact_id)
         VALUES (emailAddress, contactID);
-        CALL procedure_getEmailCount(new_count);
+        SET new_count = function_getEmailCount();
         IF old_count + 1 = new_count
         THEN
             SET insert_code = TRUE;
@@ -26,10 +26,10 @@ CREATE PROCEDURE procedure_emailDelete(emailID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
-        CALL procedure_getEmailCount(old_count);
+        SET old_count = function_getEmailCount();
         DELETE FROM table_email
         WHERE emailID = email_id;
-        CALL procedure_getEmailCount(new_count);
+        SET new_count = function_getEmailCount();
         IF old_count - 1 = new_count
         THEN
             SET delete_code = TRUE;

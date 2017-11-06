@@ -41,7 +41,7 @@ class User
     function search(mysqli $mysqli)
     {
         $sql = "CALL procedure_getUserInfo('$this->username')";
-        $result = $mysqli->query($sql)->fetch_array();
+        $result = $mysqli->query($sql)->fetch_assoc();
         return $result;
     }
 
@@ -57,7 +57,7 @@ class User
         $result = $mysqli->query($sql);
         $list = array();
         $index = 0;
-        while ($row = $result->fetch_array()) {
+        while ($row = $result->fetch_assoc()) {
             $temp = new Contact();
             $temp->contactID = $row['contact_id'];
             $temp->contactName = $row['contact_name'];

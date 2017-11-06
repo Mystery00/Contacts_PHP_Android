@@ -9,10 +9,10 @@ CREATE PROCEDURE procedure_phoneInsert(phoneNumber VARCHAR(20), phoneType VARCHA
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
-        CALL procedure_getPhoneCount(old_count);
+        SET old_count = function_getPhoneCount();
         INSERT INTO table_phone (phone_number, phone_type, contact_id)
         VALUES (phoneNumber, phoneType, contactID);
-        CALL procedure_getPhoneCount(new_count);
+        SET new_count = function_getPhoneCount();
         IF old_count + 1 = new_count
         THEN
             SET insert_code = TRUE;
@@ -27,10 +27,10 @@ CREATE PROCEDURE procedure_phoneDelete(phoneID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
         DECLARE new_count INT;
-        CALL procedure_getPhoneCount(old_count);
+        SET old_count = function_getPhoneCount();
         DELETE FROM table_phone
         WHERE phoneID = phone_id;
-        CALL procedure_getPhoneCount(new_count);
+        SET new_count = function_getPhoneCount();
         IF old_count - 1 = new_count
         THEN
             SET delete_code = TRUE;
