@@ -2,6 +2,7 @@ USE db_contacts;
 DELIMITER //
 
 # 新增记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_emailInsert;
 CREATE PROCEDURE procedure_emailInsert(emailAddress VARCHAR(45), contactID INT,
     OUT                                insert_code  BOOLEAN)
     BEGIN
@@ -20,6 +21,7 @@ CREATE PROCEDURE procedure_emailInsert(emailAddress VARCHAR(45), contactID INT,
     END //
 
 # 删除记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_emailDelete;
 CREATE PROCEDURE procedure_emailDelete(emailID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
@@ -37,6 +39,7 @@ CREATE PROCEDURE procedure_emailDelete(emailID INT, OUT delete_code BOOLEAN)
     END //
 
 # 查询记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_checkEmail;
 CREATE PROCEDURE procedure_checkEmail(emailAddress VARCHAR(45), contactID INT,
     OUT                               check_code   BOOLEAN)
     BEGIN
@@ -53,6 +56,7 @@ CREATE PROCEDURE procedure_checkEmail(emailAddress VARCHAR(45), contactID INT,
     END //
 
 # 修改记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_emailUpdate;
 CREATE PROCEDURE procedure_emailUpdate(emailAddress VARCHAR(45),
                                        contactID    INT,
                                        emailID      INT)
@@ -62,14 +66,8 @@ CREATE PROCEDURE procedure_emailUpdate(emailAddress VARCHAR(45),
         WHERE email_id = emailID;
     END //
 
-# 获取联系人数量 存储过程
-CREATE PROCEDURE procedure_getEmailCount(OUT emailCount INT)
-    BEGIN
-        SET emailCount = (SELECT count(email_id)
-                          FROM table_email);
-    END //
-
 # 获取ID 函数
+DROP FUNCTION IF EXISTS function_getEmailID;
 CREATE FUNCTION function_getEmailID(emailAddress VARCHAR(45), contactID INT)
     RETURNS INT
     BEGIN
@@ -85,7 +83,27 @@ CREATE FUNCTION function_getEmailID(emailAddress VARCHAR(45), contactID INT)
         END IF;
     END //
 
+# 获取邮箱数量 函数
+DROP FUNCTION IF EXISTS function_getEmailCount;
+CREATE FUNCTION function_getEmailCount()
+    RETURNS INT
+    BEGIN
+        RETURN (SELECT count(email_id)
+                FROM table_email);
+    END //
+
+# 获取对应联系人邮箱数量 函数
+DROP FUNCTION IF EXISTS function_getEmailCountForContact;
+CREATE FUNCTION function_getEmailCountForContact(contactID INT)
+    RETURNS INT
+    BEGIN
+        RETURN (SELECT count(email_id)
+                FROM table_email
+                WHERE contact_id = contactID);
+    END //
+
 # 新增记录 函数
+DROP FUNCTION IF EXISTS function_emailInsert;
 CREATE FUNCTION function_emailInsert(emailAddress VARCHAR(45), contactID INT)
     RETURNS INT
     BEGIN
@@ -106,6 +124,7 @@ CREATE FUNCTION function_emailInsert(emailAddress VARCHAR(45), contactID INT)
     END //
 
 # 删除记录 函数
+DROP FUNCTION IF EXISTS function_emailDelete;
 CREATE FUNCTION function_emailDelete(emailAddress VARCHAR(45), contactID INT)
     RETURNS INT
     BEGIN
@@ -126,6 +145,7 @@ CREATE FUNCTION function_emailDelete(emailAddress VARCHAR(45), contactID INT)
     END //
 
 # 修改记录 函数
+DROP FUNCTION IF EXISTS function_emailUpdate;
 CREATE FUNCTION function_emailUpdate(emailAddress VARCHAR(45), contactID INT,
                                      emailID      INT)
     RETURNS INT

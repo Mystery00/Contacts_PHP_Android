@@ -2,6 +2,7 @@ USE db_contacts;
 DELIMITER //
 
 # 删除联系人时删除对应信息
+DROP TRIGGER IF EXISTS trigger_deleteInfo;
 CREATE TRIGGER trigger_deleteInfo
 BEFORE DELETE ON table_contacts
 FOR EACH ROW

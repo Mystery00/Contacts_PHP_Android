@@ -4,6 +4,10 @@
  * User: myste
  */
 
+
+require_once '../config.php';
+require_once WWW . '/class/Phone.php';
+
 class Contact
 {
     var $contactID;
@@ -68,12 +72,12 @@ class Contact
         $result = $mysqli->query($sql);
         $this->phoneList = array();
         $index = 0;
-        while ($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_array()) {
             $temp = new Phone();
             $temp->phoneID = $row['phone_id'];
             $temp->phoneNumber = $row['phone_number'];
             $temp->phoneType = $row['phone_type'];
-            $list[$index] = $temp;
+            $this->phoneList[$index] = $temp;
             $index++;
         }
     }
@@ -84,11 +88,11 @@ class Contact
         $result = $mysqli->query($sql);
         $this->emailList = array();
         $index = 0;
-        while ($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_array()) {
             $temp = new Email();
             $temp->emailID = $row['email_id'];
             $temp->emailAddress = $row['email_address'];
-            $list[$index] = $temp;
+            $this->emailList[$index] = $temp;
             $index++;
         }
     }

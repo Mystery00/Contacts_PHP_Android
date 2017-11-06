@@ -2,6 +2,7 @@ USE db_contacts;
 DELIMITER //
 
 # 新增记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_phoneInsert;
 CREATE PROCEDURE procedure_phoneInsert(phoneNumber VARCHAR(20), phoneType VARCHAR(45),
                                        contactID   INT,
     OUT                                insert_code BOOLEAN)
@@ -21,6 +22,7 @@ CREATE PROCEDURE procedure_phoneInsert(phoneNumber VARCHAR(20), phoneType VARCHA
     END //
 
 # 删除记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_phoneDelete;
 CREATE PROCEDURE procedure_phoneDelete(phoneID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
@@ -38,6 +40,7 @@ CREATE PROCEDURE procedure_phoneDelete(phoneID INT, OUT delete_code BOOLEAN)
     END //
 
 # 查询记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_checkPhone;
 CREATE PROCEDURE procedure_checkPhone(phoneNumber VARCHAR(20), contactID INT,
     OUT                               check_code  BOOLEAN)
     BEGIN
@@ -54,6 +57,7 @@ CREATE PROCEDURE procedure_checkPhone(phoneNumber VARCHAR(20), contactID INT,
     END //
 
 # 修改记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_phoneUpdate;
 CREATE PROCEDURE procedure_phoneUpdate(phoneNumber VARCHAR(20), phoneType VARCHAR(45),
                                        contactID   INT,
                                        phoneID     INT)
@@ -63,14 +67,8 @@ CREATE PROCEDURE procedure_phoneUpdate(phoneNumber VARCHAR(20), phoneType VARCHA
         WHERE phone_id = phoneID;
     END //
 
-# 获取联系人数量 存储过程
-CREATE PROCEDURE procedure_getPhoneCount(OUT phoneCount INT)
-    BEGIN
-        SET phoneCount = (SELECT count(phone_id)
-                          FROM table_phone);
-    END //
-
 # 获取ID 函数
+DROP FUNCTION IF EXISTS function_getPhoneID;
 CREATE FUNCTION function_getPhoneID(phoneNumber VARCHAR(20), contactID INT)
     RETURNS INT
     BEGIN
@@ -86,7 +84,27 @@ CREATE FUNCTION function_getPhoneID(phoneNumber VARCHAR(20), contactID INT)
         END IF;
     END //
 
+# 获取电话数量 函数
+DROP FUNCTION IF EXISTS function_getPhoneCount;
+CREATE FUNCTION function_getPhoneCount()
+    RETURNS INT
+    BEGIN
+        RETURN (SELECT count(phone_id)
+                FROM table_phone);
+    END //
+
+# 获取对应联系人电话数量 函数
+DROP FUNCTION IF EXISTS function_getPhoneCountForContact;
+CREATE FUNCTION function_getPhoneCountForContact(contactID INT)
+    RETURNS INT
+    BEGIN
+        RETURN (SELECT count(phone_id)
+                FROM table_phone
+                WHERE contact_id = contactID);
+    END //
+
 # 新增记录 函数
+DROP FUNCTION IF EXISTS function_phoneInsert;
 CREATE FUNCTION function_phoneInsert(phoneNumber VARCHAR(20), phoneType VARCHAR(45), contactID INT)
     RETURNS INT
     BEGIN
@@ -107,6 +125,7 @@ CREATE FUNCTION function_phoneInsert(phoneNumber VARCHAR(20), phoneType VARCHAR(
     END //
 
 # 删除记录 函数
+DROP FUNCTION IF EXISTS function_phoneDelete;
 CREATE FUNCTION function_phoneDelete(phoneNumber VARCHAR(20), contactID INT)
     RETURNS INT
     BEGIN
@@ -127,6 +146,7 @@ CREATE FUNCTION function_phoneDelete(phoneNumber VARCHAR(20), contactID INT)
     END //
 
 # 修改记录 函数
+DROP FUNCTION IF EXISTS function_phoneUpdate;
 CREATE FUNCTION function_phoneUpdate(phoneNumber VARCHAR(20), phoneType VARCHAR(45), contactID INT,
                                      phoneID     INT)
     RETURNS INT

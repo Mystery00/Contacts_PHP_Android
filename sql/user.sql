@@ -60,6 +60,15 @@ CREATE PROCEDURE procedure_getUserInfo(new_username TEXT)
         WHERE username = new_username;
     END //
 
+# 获取联系人列表 存储过程
+DROP PROCEDURE IF EXISTS procedure_getContactList;
+CREATE PROCEDURE procedure_getContactList(new_user_id INT)
+    BEGIN
+        SELECT *
+        FROM table_contacts
+        WHERE user_id = new_user_id;
+    END //
+
 # 登陆 函数
 DROP FUNCTION IF EXISTS function_login;
 CREATE FUNCTION function_login(new_username TEXT, new_password TEXT)

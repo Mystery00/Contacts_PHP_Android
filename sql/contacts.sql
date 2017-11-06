@@ -2,6 +2,7 @@ USE db_contacts;
 DELIMITER //
 
 # 新增记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_contactInsert;
 CREATE PROCEDURE procedure_contactInsert(contactName VARCHAR(45), contactInit VARCHAR(1),
                                          contactMark TEXT,
                                          userID      INT,
@@ -22,6 +23,7 @@ CREATE PROCEDURE procedure_contactInsert(contactName VARCHAR(45), contactInit VA
     END //
 
 # 删除记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_contactDelete;
 CREATE PROCEDURE procedure_contactDelete(contactID INT, OUT delete_code BOOLEAN)
     BEGIN
         DECLARE old_count INT;
@@ -39,6 +41,7 @@ CREATE PROCEDURE procedure_contactDelete(contactID INT, OUT delete_code BOOLEAN)
     END //
 
 # 查询记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_checkContact;
 CREATE PROCEDURE procedure_checkContact(contactName VARCHAR(45), userID INT, OUT check_code BOOLEAN)
     BEGIN
         DECLARE temp INT;
@@ -54,6 +57,7 @@ CREATE PROCEDURE procedure_checkContact(contactName VARCHAR(45), userID INT, OUT
     END //
 
 # 修改记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_contactUpdate;
 CREATE PROCEDURE procedure_contactUpdate(contactName VARCHAR(45), contactInit VARCHAR(1),
                                          contactMark TEXT,
                                          userID      INT,
@@ -65,14 +69,26 @@ CREATE PROCEDURE procedure_contactUpdate(contactName VARCHAR(45), contactInit VA
         WHERE contact_id = contactID;
     END //
 
-# 获取联系人数量 存储过程
-CREATE PROCEDURE procedure_getContactCount(OUT contactCount INT)
+# 获取电话列表 存储过程
+DROP PROCEDURE IF EXISTS procedure_getPhoneList;
+CREATE PROCEDURE procedure_getPhoneList(new_contact_id INT)
     BEGIN
-        SET contactCount = (SELECT count(contact_id)
-                            FROM table_contacts);
+        SELECT *
+        FROM table_phone
+        WHERE contact_id = new_contact_id;
+    END //
+
+# 获取邮箱列表 存储过程
+DROP PROCEDURE IF EXISTS procedure_getEmailList;
+CREATE PROCEDURE procedure_getEmailList(new_contact_id INT)
+    BEGIN
+        SELECT *
+        FROM table_email
+        WHERE contact_id = new_contact_id;
     END //
 
 # 获取ID 函数
+DROP FUNCTION IF EXISTS function_getContactID;
 CREATE FUNCTION function_getContactID(contactName VARCHAR(45), userID INT)
     RETURNS INT
     BEGIN
@@ -88,7 +104,27 @@ CREATE FUNCTION function_getContactID(contactName VARCHAR(45), userID INT)
         END IF;
     END //
 
+# 获取联系人数量 函数
+DROP FUNCTION IF EXISTS function_getContactCount;
+CREATE FUNCTION function_getContactCount()
+    RETURNS INT
+    BEGIN
+        RETURN (SELECT count(contact_id)
+                FROM table_contacts);
+    END //
+
+# 获取对应用户联系人数量 函数
+DROP FUNCTION IF EXISTS function_getContactCountForUser;
+CREATE FUNCTION function_getContactCountForUser(userID INT)
+    RETURNS INT
+    BEGIN
+        RETURN (SELECT count(contact_id)
+                FROM table_contacts
+                WHERE user_id = userID);
+    END //
+
 # 新增记录 函数
+DROP FUNCTION IF EXISTS function_contactInsert;
 CREATE FUNCTION function_contactInsert(contactName VARCHAR(45), contactInit VARCHAR(1),
                                        contactMark TEXT, userID INT)
     RETURNS INT
@@ -110,6 +146,7 @@ CREATE FUNCTION function_contactInsert(contactName VARCHAR(45), contactInit VARC
     END //
 
 # 删除记录 函数
+DROP FUNCTION IF EXISTS function_contactDelete;
 CREATE FUNCTION function_contactDelete(contactName VARCHAR(45), userID INT)
     RETURNS INT
     BEGIN
@@ -130,6 +167,7 @@ CREATE FUNCTION function_contactDelete(contactName VARCHAR(45), userID INT)
     END //
 
 # 修改记录 函数
+DROP FUNCTION IF EXISTS function_contactUpdate;
 CREATE FUNCTION function_contactUpdate(contactName VARCHAR(45), contactInit VARCHAR(1),
                                        contactMark TEXT, userID INT,
                                        phoneID     INT)
