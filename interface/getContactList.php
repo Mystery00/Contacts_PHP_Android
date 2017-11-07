@@ -16,8 +16,11 @@ if (!$mysqli) {
 }
 
 $user = new User();
-$username = $_GET['username'];
+$username = $_POST['username'];
 $user->username = $username;
-$user->userID = $user->getUserID($mysqli);
+if (!empty($_POST['user_id']))
+    $user->userID = $_POST['user_id'];
+else
+    $user->userID = $user->getUserID($mysqli);
 $contactList = $user->getContacts($mysqli);
 echo json_encode($contactList);
