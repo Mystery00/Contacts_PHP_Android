@@ -21,7 +21,15 @@ class Contact
     function save(mysqli $mysqli)
     {
         $sql = "SELECT function_contactInsert('$this->contactName', '$this->contactInit', '$this->contactMark', '$this->userID')";
-        return $mysqli->query($sql)->fetch_row()[0];
+        $code = $mysqli->query($sql)->fetch_row()[0];
+        if ($code != '0') {
+            foreach ($this->phoneList as $item) {
+                $temp_code = $item->save();
+                if ($temp_code != '0')
+                    return $temp_code;
+            }
+        }
+        return $code;
     }
 
     function delete(mysqli $mysqli)
@@ -49,8 +57,17 @@ class Contact
 
     function update(mysqli $mysqli)
     {
+        echo json_encode($this);
         $sql = "SELECT function_contactUpdate('$this->contactName','$this->contactInit','$this->contactMark','$this->userID','$this->contactID')";
-        return $mysqli->query($sql)->fetch_row()[0];
+        $code = $mysqli->query($sql)->fetch_row()[0];
+        if ($code != '0') {
+            foreach ($this->phoneList as $item) {
+                $temp_code = $item->save();
+                if ($temp_code != '0')
+                    return $temp_code;
+            }
+        }
+        return $code;
     }
 
     function getContactID(mysqli $mysqli)

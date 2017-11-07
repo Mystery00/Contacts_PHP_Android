@@ -70,6 +70,12 @@ function actionResponseFormat($object, $action, int $code)
         case 'contact':
             $object = '联系人';
             break;
+        case 'phone':
+            $object = '电话';
+            break;
+        case 'email':
+            $object = '邮箱';
+            break;
     }
     switch ($action) {
         case 'insert':

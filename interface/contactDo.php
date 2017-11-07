@@ -40,6 +40,10 @@ switch ($action) {
         $contact->contactName = $contactName;
         $contact->contactInit = $contactInit;
         $contact->contactMark = $contactMark;
+        if (!empty($_POST['phone_list']))
+            $contact->phoneList = json_decode($_POST['phone_list']);
+        if (!empty($_POST['email_list']))
+            $contact->emailList = json_decode($_POST['email_list']);
         echo json_encode(actionResponseFormat('contact', $action, $contact->save($mysqli)));
         break;
     case 'delete':
@@ -85,6 +89,10 @@ switch ($action) {
         }
         if (!empty($_POST['contact_mark']))
             $contact->contactMark = $_POST['contact_mark'];
+        if (!empty($_POST['phone_list']))
+            $contact->phoneList = json_decode($_POST['phone_list']);
+        if (!empty($_POST['email_list']))
+            $contact->emailList = json_decode($_POST['email_list']);
         echo json_encode(actionResponseFormat('contact', $action, $contact->update($mysqli)));
         break;
     default:

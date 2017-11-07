@@ -9,8 +9,6 @@ require_once WWW . '/util/MysqlUtil.php';
 require_once WWW . '/class/User.php';
 require_once WWW . '/class/Contact.php';
 
-$contact = new Contact();
-
 $mysqli = connectDatabase();
 if (!$mysqli) {
     echo json_encode(loginResponseFormat(1));

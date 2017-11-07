@@ -8,4 +8,5 @@ class Email
 {
     var $emailID;
     var $emailAddress;
+    var $contactID;
 }

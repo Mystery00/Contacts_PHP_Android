@@ -63,13 +63,11 @@ class User
             $temp->contactName = $row['contact_name'];
             $temp->contactInit = $row['contact_init'];
             $temp->contactMark = $row['contact_mark'];
+            $temp->getPhoneList($mysqli);
+            $temp->getEmailList($mysqli);
             $temp->userID = $this->userID;
             $list[$index] = $temp;
             $index++;
-        }
-        foreach ($list as $temp) {
-            $temp->getPhoneList($mysqli);
-            $temp->getEmailList($mysqli);
         }
         return $list;
     }
