@@ -23,8 +23,13 @@ class Contact
         $sql = "SELECT function_contactInsert('$this->contactName', '$this->contactInit', '$this->contactMark', '$this->userID')";
         $code = $mysqli->query($sql)->fetch_row()[0];
         if ($code != '0') {
+            $this->contactID = $mysqli->query("SELECT function_getContactID('$this->contactName','$this->userID')")->fetch_row()[0];
             foreach ($this->phoneList as $item) {
-                $temp_code = $item->save();
+                $phone = new Phone();
+                $phone->phoneNumber = $item->phoneNumber;
+                $phone->phoneType = $item->phoneType;
+                $phone->contactID = $this->contactID;
+                $temp_code = $phone->save($mysqli);
                 if ($temp_code != '0')
                     return $temp_code;
             }
