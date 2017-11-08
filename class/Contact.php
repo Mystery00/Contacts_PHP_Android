@@ -33,6 +33,14 @@ class Contact
                 if ($temp_code != '0')
                     return $temp_code;
             }
+            foreach ($this->emailList as $item) {
+                $email = new Email();
+                $email->emailAddress = $item->emailAddress;
+                $email->contactID = $item->contactID;
+                $temp_code = $email->save($mysqli);
+                if ($temp_code != '0')
+                    return $temp_code;
+            }
         }
         return $code;
     }
@@ -66,10 +74,29 @@ class Contact
         $sql = "SELECT function_contactUpdate('$this->contactName','$this->contactInit','$this->contactMark','$this->userID','$this->contactID')";
         $code = $mysqli->query($sql)->fetch_row()[0];
         if ($code != '0') {
+            $this->contactID = $mysqli->query("SELECT function_getContactID('$this->contactName','$this->userID')")->fetch_row()[0];
+            if ($this->deletePhone($mysqli) != '0') {
+                return 2;
+            }
+            if ($this->deleteEmail($mysqli) != '0') {
+                return 2;
+            }
             foreach ($this->phoneList as $item) {
-                $temp_code = $item->save();
+                $phone = new Phone();
+                $phone->phoneNumber = $item->phoneNumber;
+                $phone->phoneType = $item->phoneType;
+                $phone->contactID = $this->contactID;
+                $temp_code = $phone->save($mysqli);
                 if ($temp_code != '0')
-                    return $temp_code;
+                    return 2;
+            }
+            foreach ($this->emailList as $item) {
+                $email = new Email();
+                $email->emailAddress = $item->emailAddress;
+                $email->contactID = $this->contactID;
+                $temp_code = $email->save($mysqli);
+                if ($temp_code != '0')
+                    return 2;
             }
         }
         return $code;
@@ -110,5 +137,17 @@ class Contact
             $this->emailList[$index] = $temp;
             $index++;
         }
+    }
+
+    function deletePhone(mysqli $mysqli)
+    {
+        $sql = "SELECT function_phoneDeleteForContact('$this->contactID')";
+        return $mysqli->query($sql)->fetch_row()[0];
+    }
+
+    function deleteEmail(mysqli $mysqli)
+    {
+        $sql = "SELECT function_emailDeleteForContact('$this->contactID')";
+        return $mysqli->query($sql)->fetch_row()[0];
     }
 }

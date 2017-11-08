@@ -144,6 +144,23 @@ CREATE FUNCTION function_emailDelete(emailAddress VARCHAR(45), contactID INT)
         END IF;
     END //
 
+# 删除对应联系人的相关记录 函数
+DROP FUNCTION IF EXISTS function_emailDeleteForContact;
+CREATE FUNCTION function_emailDeleteForContact(contactID INT)
+    RETURNS INT
+    BEGIN
+        DECLARE temp_count INT;
+        DELETE FROM table_email
+        WHERE contact_id = contactID;
+        SET temp_count = function_getEmailCountForContact(contactID);
+        IF temp_count = 0
+        THEN
+            RETURN 0; #删除成功
+        ELSE
+            RETURN 1; #删除失败
+        END IF;
+    END //
+
 # 修改记录 函数
 DROP FUNCTION IF EXISTS function_emailUpdate;
 CREATE FUNCTION function_emailUpdate(emailAddress VARCHAR(45), contactID INT,

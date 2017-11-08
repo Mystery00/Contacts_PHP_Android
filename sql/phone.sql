@@ -145,6 +145,23 @@ CREATE FUNCTION function_phoneDelete(phoneNumber VARCHAR(20), contactID INT)
         END IF;
     END //
 
+# 删除对应联系人的相关记录 函数
+DROP FUNCTION IF EXISTS function_phoneDeleteForContact;
+CREATE FUNCTION function_phoneDeleteForContact(contactID INT)
+    RETURNS INT
+    BEGIN
+        DECLARE temp_count INT;
+        DELETE FROM table_phone
+        WHERE contact_id = contactID;
+        SET temp_count = function_getPhoneCountForContact(contactID);
+        IF temp_count = 0
+        THEN
+            RETURN 0; #删除成功
+        ELSE
+            RETURN 1; #删除失败
+        END IF;
+    END //
+
 # 修改记录 函数
 DROP FUNCTION IF EXISTS function_phoneUpdate;
 CREATE FUNCTION function_phoneUpdate(phoneNumber VARCHAR(20), phoneType VARCHAR(45), contactID INT,
