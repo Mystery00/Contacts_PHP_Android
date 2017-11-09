@@ -11,9 +11,9 @@ require_once WWW . '/util/MysqlUtil.php';
 require_once WWW . '/class/Contact.php';
 
 $action = $_POST['action'];
-$userID = $_POST['user_id'];
+$username=$_POST['username'];
 
-if (empty($action) || empty($userID)) {
+if (empty($action) || empty($username)) {
     echo json_encode(actionResponseFormat('contact', '', 3));
     return;
 }
@@ -23,6 +23,9 @@ if (!$mysqli) {
     echo json_encode(actionResponseFormat('contact', 'database', 2));
     return;
 }
+$user=new User();
+$user->username=$username;
+$userID = $user->getUserID($mysqli);
 
 switch ($action) {
     case 'insert':

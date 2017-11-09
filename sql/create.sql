@@ -3,6 +3,7 @@ DROP DATABASE IF EXISTS db_contacts;
 CREATE DATABASE db_contacts
     DEFAULT CHARACTER SET utf8;
 
+USE db_contacts;
 # 创建用户表
 DROP TABLE IF EXISTS table_user;
 CREATE TABLE db_contacts.table_user (
