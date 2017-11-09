@@ -56,6 +56,28 @@ CREATE PROCEDURE procedure_checkContact(contactName VARCHAR(45), userID INT, OUT
         END IF;
     END //
 
+# 查询记录 存储过程
+DROP PROCEDURE IF EXISTS procedure_checkContactExist;
+CREATE PROCEDURE procedure_checkContactExist(contactName VARCHAR(45), userID INT, contactID INT,
+    OUT                                      check_code  BOOLEAN)
+    BEGIN
+        DECLARE temp INT;
+        SET temp = 0;
+        SET temp = temp + (SELECT count(temp)
+                           FROM table_contacts
+                           WHERE contactName = contact_name AND userID = user_id);
+        SET temp = temp + (SELECT count(temp)
+                           FROM table_contacts
+                           WHERE contactName = contact_name AND userID = user_id AND
+                                 contact_id = contactID);
+        IF temp = 1
+        THEN
+            SET check_code = TRUE;
+        ELSE
+            SET check_code = FALSE;
+        END IF;
+    END //
+
 # 修改记录 存储过程
 DROP PROCEDURE IF EXISTS procedure_contactUpdate;
 CREATE PROCEDURE procedure_contactUpdate(contactName VARCHAR(45), contactInit VARCHAR(1),
@@ -175,14 +197,14 @@ CREATE FUNCTION function_contactUpdate(contactName VARCHAR(45), contactInit VARC
     BEGIN
         DECLARE temp INT;
         DECLARE isExist BOOLEAN;
-        CALL procedure_checkContact(contactName, userID, isExist);
+        CALL procedure_checkContactExist(contactName, userID, contactID, isExist);
         IF isExist
         THEN
             RETURN -1; #联系人已存在
         END IF;
         SET temp = (SELECT count(contact_id)
-                  FROM table_contacts
-                  WHERE contact_id = contactID);
+                    FROM table_contacts
+                    WHERE contact_id = contactID);
         IF temp = 0
         THEN
             RETURN 1; #记录不存在

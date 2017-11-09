@@ -9,6 +9,7 @@ require_once WWW . '/util/MysqlUtil.php';
 require_once WWW . '/util/ResponseUtil.php';
 require_once WWW . '/util/MysqlUtil.php';
 require_once WWW . '/class/Contact.php';
+require_once WWW . '/class/User.php';
 
 $action = $_POST['action'];
 $username=$_POST['username'];
@@ -69,7 +70,7 @@ switch ($action) {
             $contact->contactInit = $_POST['contact_init'];
         if (!empty($_POST['contact_mark']))
             $contact->contactMark = $_POST['contact_mark'];
-        echo json_encode($contact->search($mysqli)->fetch_assoc());
+        echo json_encode($contact->search($mysqli));
         break;
     case 'update':
         $contact = new Contact();

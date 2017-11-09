@@ -7,6 +7,7 @@
 
 require_once '../config.php';
 require_once WWW . '/class/Phone.php';
+require_once WWW . '/class/Email.php';
 
 class Contact
 {
@@ -22,7 +23,7 @@ class Contact
     {
         $sql = "SELECT function_contactInsert('$this->contactName', '$this->contactInit', '$this->contactMark', '$this->userID')";
         $code = $mysqli->query($sql)->fetch_row()[0];
-        if ($code != '0') {
+        if ($code == '0') {
             $this->contactID = $mysqli->query("SELECT function_getContactID('$this->contactName','$this->userID')")->fetch_row()[0];
             foreach ($this->phoneList as $item) {
                 $phone = new Phone();
@@ -36,7 +37,7 @@ class Contact
             foreach ($this->emailList as $item) {
                 $email = new Email();
                 $email->emailAddress = $item->emailAddress;
-                $email->contactID = $item->contactID;
+                $email->contactID = $this->contactID;
                 $temp_code = $email->save($mysqli);
                 if ($temp_code != '0')
                     return $temp_code;
@@ -56,24 +57,35 @@ class Contact
         $sql = "SELECT * FROM table_contacts";
         $sql .= " WHERE ";
         if (!empty($this->contactName))
-            $sql .= "contact_name = '$this->contactName' AND ";
+            $sql .= "contact_name like '%$this->contactName%' AND ";
         if (!empty($this->contactInit))
-            $sql .= "contact_init = '$this->contactInit' AND ";
+            $sql .= "contact_init like '%$this->contactInit%' AND ";
         if (!empty($this->contactMark))
-            $sql .= "contact_mark = '$this->contactMark' AND ";
+            $sql .= "contact_mark like '%$this->contactMark%' AND ";
         $sql .= "user_id = '$this->userID'";
         $result = $mysqli->query($sql);
-        if ($result->num_rows == 1)
-            $this->contactID = $result[0]['contact_id'];
-        return $result;
+        $list = array();
+        $index = 0;
+        while ($row = $result->fetch_assoc()) {
+            $temp = new Contact();
+            $temp->contactID = $row['contact_id'];
+            $temp->contactName = $row['contact_name'];
+            $temp->contactInit = $row['contact_init'];
+            $temp->contactMark = $row['contact_mark'];
+            $temp->getPhoneList($mysqli);
+            $temp->getEmailList($mysqli);
+            $temp->userID = $this->userID;
+            $list[$index] = $temp;
+            $index++;
+        }
+        return $list;
     }
 
     function update(mysqli $mysqli)
     {
-        echo json_encode($this);
         $sql = "SELECT function_contactUpdate('$this->contactName','$this->contactInit','$this->contactMark','$this->userID','$this->contactID')";
         $code = $mysqli->query($sql)->fetch_row()[0];
-        if ($code != '0') {
+        if ($code == '0') {
             $this->contactID = $mysqli->query("SELECT function_getContactID('$this->contactName','$this->userID')")->fetch_row()[0];
             if ($this->deletePhone($mysqli) != '0') {
                 return 2;
